@@ -12,21 +12,21 @@ class RenderTest extends FunSuite {
   }
 
   test("ExprIdentifier") {
-    val n = ExprIdentifier("sa")
+    val n = ExprIdent("sa")
     val r = Render.str(n)
 
     assert(r == "sa")
   }
 
   test("ExprUnaryOperator") {
-    val n = ExprUnaryOperator("+", ExprIdentifier("a"))
+    val n = ExprUnaryOperator("+", ExprIdent("a"))
     val r = Render.str(n)
 
     assert(r == "+a")
   }
 
   test("ExprBinaryOperator") {
-    val n = ExprBinaryOperator(ExprReal(10), "+", ExprIdentifier("a"))
+    val n = ExprBinaryOperator(ExprReal(10), "+", ExprIdent("a"))
     val r = Render.str(n)
 
     assert(r == "(10.0 + a)")
@@ -40,14 +40,14 @@ class RenderTest extends FunSuite {
   }
 
   test("ExprExprFunction_one") {
-    val n = ExprFunction("sin", List(ExprIdentifier("x")))
+    val n = ExprFunction("sin", List(ExprIdent("x")))
     val r = Render.str(n)
 
     assert(r == "sin(x)")
   }
 
   test("ExprExprFunction_many") {
-    val n = ExprFunction("max", List(ExprIdentifier("a"), ExprReal(10)))
+    val n = ExprFunction("max", List(ExprIdent("a"), ExprReal(10)))
     val r = Render.str(n)
 
     assert(r == "max(a, 10.0)")
