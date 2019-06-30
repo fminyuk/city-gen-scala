@@ -1,4 +1,3 @@
 package org.nnc.citygen.ast
 
-trait Expr extends Node {
-}
+trait Expr extends Node
