@@ -9,21 +9,38 @@ object Parser extends RegexParsers {
   private val real = """[+-]?\d+(:?\.\d*)?(:?[eE][+-]?\d+)?""".r
   private val identifier = """[a-zA-Z_][a-zA-Z_0-9]*""".r
 
-
-  def expr: Parser[Expr] = term ~ opt(("+" | "-") ~ term) ^^ {
-    case t ~ None => t
-    case l ~ Some(op ~ r) => ExprBinaryOperator(l, op, r)
-  }
-
-  def term: Parser[Expr] = factor ~ opt(("*" | "/") ~ factor) ^^ {
-    case t ~ None => t
-    case l ~ Some(op ~ r) => ExprBinaryOperator(l, op, r)
-  }
+  def expr: Parser[Expr] = operators(List(
+    ("+ -", unary),
+    ("!", unary),
+    ("* /", binary),
+    ("+ -", binary),
+    ("== != >= <= > <", binary),
+    ("&&", binary),
+    ("||", binary)
+  ))(factor)
 
   def func: Parser[Expr] = identifier ~ opt("(" ~> repsep(expr, ",") <~ ")") ^^ {
     case name ~ None => ExprIdent(name)
     case name ~ Some(args) => ExprFunction(name, args)
   }
 
-  def factor: Parser[Expr] = real ^^ { s => ExprReal(s.toDouble) } | func | "(" ~> expr <~ ")"
+  def factor: Parser[Expr] = real ^^ { s => ExprAbs(s.toDouble) } | func | "(" ~> expr <~ ")"
+
+  private type Operators = (String, (Parser[Expr], Parser[String]) => Parser[Expr])
+
+  private def operators(ops: Seq[Operators])(s: Parser[Expr]): Parser[Expr] = ops.foldLeft(s) {
+    (p, op) => op._2(p, operexpr(op._1))
+  }
+
+  private def unary(p: Parser[Expr], ops: Parser[String]): Parser[Expr] = opt(ops) ~ p ^^ {
+    case None ~ t => t
+    case Some(op) ~ t => ExprFunction(op, List(t))
+  }
+
+  private def binary(p: Parser[Expr], ops: Parser[String]): Parser[Expr] = p ~ opt(ops ~ p) ^^ {
+    case t ~ None => t
+    case l ~ Some(op ~ r) => ExprFunction(op, List(l, r))
+  }
+
+  private def operexpr(ops: String): Parser[String] = ops.split("""\s+""").map(Parser(_)).reduce(_ | _)
 }

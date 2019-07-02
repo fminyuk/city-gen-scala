@@ -23,7 +23,7 @@ object Render {
       builder.append(node.probability)
     }
 
-    override def visit(node: ExprReal): Unit = {
+    override def visit(node: ExprAbs): Unit = {
       builder.append(node.value)
     }
 
@@ -40,21 +40,6 @@ object Render {
         }
         arg.accept(this)
       }
-      builder.append(')')
-    }
-
-    override def visit(node: ExprUnaryOperator): Unit = {
-      builder.append(node.operator)
-      node.expr.accept(this)
-    }
-
-    override def visit(node: ExprBinaryOperator): Unit = {
-      builder.append('(')
-      node.left.accept(this)
-      builder.append(' ')
-      builder.append(node.operator)
-      builder.append(' ')
-      node.right.accept(this)
       builder.append(')')
     }
   }
