@@ -1,6 +1,6 @@
 package org.nnc.citygen
 
-import org.nnc.citygen.ast.{ExprFunction, ExprIdent, ExprAbs}
+import org.nnc.citygen.ast.{ExprAbs, ExprFunction, ExprIdent, ExprRel}
 import org.scalatest.FunSuite
 
 class ParserTest extends FunSuite {
@@ -8,6 +8,12 @@ class ParserTest extends FunSuite {
     val r = Parser.parseAll(Parser.expr, "10")
 
     assert(r.get == ExprAbs(10))
+  }
+
+  test("rel") {
+    val r = Parser.parseAll(Parser.expr, "1r")
+
+    assert(r.get == ExprRel(1))
   }
 
   test("ident") {
@@ -45,5 +51,13 @@ class ParserTest extends FunSuite {
     val p = Render.str(r.get)
 
     assert(p == "+(1.0, min(*(a, 1.0), -(10.0)))")
+  }
+
+  test("complex: split(1, 0.2r, 0.1r, 2)") {
+    val r = Parser.parseAll(Parser.expr, "split(1, 0.2r, 0.1r, 2)")
+
+    val p = Render.str(r.get)
+
+    assert(p == "split(1.0, 0.2r, 0.1r, 2.0)")
   }
 }

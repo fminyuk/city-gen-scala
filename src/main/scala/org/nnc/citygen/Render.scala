@@ -27,6 +27,11 @@ object Render {
       builder.append(node.value)
     }
 
+    override def visit(node: ExprRel): Unit = {
+      builder.append(node.value)
+      builder.append('r')
+    }
+
     override def visit(node: ExprIdent): Unit = {
       builder.append(node.name)
     }

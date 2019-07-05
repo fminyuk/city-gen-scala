@@ -24,7 +24,12 @@ object Parser extends RegexParsers {
     case name ~ Some(args) => ExprFunction(name, args)
   }
 
-  def factor: Parser[Expr] = real ^^ { s => ExprAbs(s.toDouble) } | func | "(" ~> expr <~ ")"
+  def value: Parser[Expr] = real ~ opt("r") ^^ {
+    case value ~ None => ExprAbs(value.toDouble)
+    case value ~ Some("r") => ExprRel(value.toDouble)
+  }
+
+  def factor: Parser[Expr] = value | func | "(" ~> expr <~ ")"
 
   private type Operators = (String, (Parser[Expr], Parser[String]) => Parser[Expr])
 

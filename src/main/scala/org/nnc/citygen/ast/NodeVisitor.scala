@@ -5,6 +5,8 @@ trait NodeVisitor {
 
   def visit(node: ExprAbs): Unit
 
+  def visit(node: ExprRel): Unit
+
   def visit(node: ExprIdent): Unit
 
   def visit(node: ExprFunction): Unit

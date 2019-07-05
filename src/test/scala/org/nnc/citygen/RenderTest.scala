@@ -11,6 +11,13 @@ class RenderTest extends FunSuite {
     assert(r == "5.0")
   }
 
+  test("ExprRel") {
+    val n = ExprRel(5)
+    val r = Render.str(n)
+
+    assert(r == "5.0r")
+  }
+
   test("ExprIdentifier") {
     val n = ExprIdent("sa")
     val r = Render.str(n)
