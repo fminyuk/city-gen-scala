@@ -10,4 +10,8 @@ trait NodeVisitor {
   def visit(node: ExprIdent): Unit
 
   def visit(node: ExprFunction): Unit
+
+  def visit(node: SubScope): Unit
+
+  def visit(node: RepMatch): Unit
 }

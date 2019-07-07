@@ -25,21 +25,21 @@ class RenderTest extends FunSuite {
     assert(r == "sa")
   }
 
-  test("ExprExprFunction_empty") {
+  test("ExprFunction: empty") {
     val n = ExprFunction("gen", List())
     val r = Render.str(n)
 
     assert(r == "gen()")
   }
 
-  test("ExprExprFunction_one") {
+  test("ExprFunction: one") {
     val n = ExprFunction("sin", List(ExprIdent("x")))
     val r = Render.str(n)
 
     assert(r == "sin(x)")
   }
 
-  test("ExprExprFunction_many") {
+  test("ExprFunction: many") {
     val n = ExprFunction("max", List(ExprIdent("a"), ExprAbs(10)))
     val r = Render.str(n)
 

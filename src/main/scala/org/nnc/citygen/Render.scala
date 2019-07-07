@@ -39,13 +39,29 @@ object Render {
     override def visit(node: ExprFunction): Unit = {
       builder.append(node.name)
       builder.append('(')
-      for ((arg, i) <- node.args.zipWithIndex) {
-        if (i > 0) {
-          builder.append(", ")
-        }
-        arg.accept(this)
-      }
+      add(node.args, ", ")
       builder.append(')')
+    }
+
+    override def visit(node: SubScope): Unit = {
+      builder.append('[')
+      add(node.sub, " ")
+      builder.append(']')
+    }
+
+    override def visit(node: RepMatch): Unit = {
+      builder.append('{')
+      add(node.items, "|")
+      builder.append('}')
+    }
+
+    private def add(nodes: Seq[Node], separator: String): Unit = {
+      for ((node, i) <- nodes.zipWithIndex) {
+        if (i > 0) {
+          builder.append(separator)
+        }
+        node.accept(this)
+      }
     }
   }
 }
