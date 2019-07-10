@@ -1,6 +1,7 @@
 package org.nnc.citygen.ast
 
-case class RepMatch(items: Seq[Stm]) extends Stm {
+case class StmModifier(name: String,
+                       args: Seq[Expr]) extends Stm {
 
   override def accept(visitor: NodeVisitor): Unit = visitor.visit(this)
 }

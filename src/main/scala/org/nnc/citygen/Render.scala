@@ -43,16 +43,27 @@ object Render {
       builder.append(')')
     }
 
-    override def visit(node: SubScope): Unit = {
+    override def visit(node: StmIdent): Unit = {
+      builder.append(node.name)
+    }
+
+    override def visit(node: StmBlock): Unit = {
       builder.append('[')
-      add(node.sub, " ")
+      add(node.stms, " ")
       builder.append(']')
     }
 
-    override def visit(node: RepMatch): Unit = {
+    override def visit(node: StmMatch): Unit = {
       builder.append('{')
       add(node.items, "|")
       builder.append('}')
+    }
+
+    override def visit(node: StmModifier): Unit = {
+      builder.append(node.name)
+      builder.append('(')
+      add(node.args, ", ")
+      builder.append(')')
     }
 
     private def add(nodes: Seq[Node], separator: String): Unit = {
