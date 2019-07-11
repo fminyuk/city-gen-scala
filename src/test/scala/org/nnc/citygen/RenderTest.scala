@@ -45,4 +45,25 @@ class RenderTest extends FunSuite {
 
     assert(r == "max(a, 10.0)")
   }
+
+  test("Rule: simple") {
+    val n = Rule(1, "p", null, StmIdent("s"), 0.1)
+    val r = Render.str(n)
+
+    assert(r == "1: p -> s: 0.1")
+  }
+
+  test("Rule: condition") {
+    val n = Rule(1, "p", ExprFunction(">", List(ExprIdent("h"), ExprAbs(1))), StmIdent("s"), 0.1)
+    val r = Render.str(n)
+
+    assert(r == "1: p: >(h, 1.0) -> s: 0.1")
+  }
+
+  test("Rule: modifier") {
+    val n = Rule(1, "p", null, StmBlock(List(StmModifier("s", List(ExprAbs(1))), StmMatch(List(StmIdent("A"))))), 0.1)
+    val r = Render.str(n)
+
+    assert(r == "1: p -> [s(1.0) {A}]: 0.1")
+  }
 }

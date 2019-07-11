@@ -18,7 +18,13 @@ object Render {
     override def visit(node: Rule): Unit = {
       builder.append(node.id)
       builder.append(": ")
-      node.cond.accept(this)
+      builder.append(node.predecessor)
+      if (node.cond != null) {
+        builder.append(": ")
+        node.cond.accept(this)
+      }
+      builder.append(" -> ")
+      node.successor.accept(this)
       builder.append(": ")
       builder.append(node.probability)
     }
@@ -49,7 +55,7 @@ object Render {
 
     override def visit(node: StmBlock): Unit = {
       builder.append('[')
-      add(node.stms, " ")
+      add(node.items, " ")
       builder.append(']')
     }
 
