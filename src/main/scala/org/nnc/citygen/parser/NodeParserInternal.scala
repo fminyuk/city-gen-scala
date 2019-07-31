@@ -9,7 +9,11 @@ private class NodeParserInternal extends RegexParsers {
   private val real = """[+-]?\d+(:?\.\d*)?(:?[eE][+-]?\d+)?""".r
   private val identifier = """[a-zA-Z_][a-zA-Z_0-9]*""".r
 
-  def rule: Parser[Node] = integer ~ ":" ~ identifier ~ opt(":" ~ expr) ~ "->" ~ stm ~ ":" ~ real ^^ {
+  def rules: Parser[Seq[Rule]] = rep(rule) ^^ {
+    rules => rules
+  }
+
+  def rule: Parser[Rule] = integer ~ ":" ~ identifier ~ opt(":" ~ expr) ~ "->" ~ stm ~ ":" ~ real ^^ {
     case id ~ _ ~ pre ~ Some(_ ~ cond) ~ _ ~ suc ~ _ ~ prob => Rule(id.toInt, pre, cond, suc, prob.toDouble)
     case id ~ _ ~ pre ~ None ~ _ ~ suc ~ _ ~ prob => Rule(id.toInt, pre, null, suc, prob.toDouble)
   }
