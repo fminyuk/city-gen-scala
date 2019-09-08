@@ -1,4 +1,4 @@
-package org.nnc.citygen.parser
+package org.nnc.citygen.parsers
 
 import org.nnc.citygen.ast.Rule
 

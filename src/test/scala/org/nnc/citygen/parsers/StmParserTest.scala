@@ -1,10 +1,11 @@
-package org.nnc.citygen.parser
+package org.nnc.citygen.parsers
 
 import org.nnc.citygen.ast._
 import org.scalatest.FunSuite
 
-class NodeParserInternalStmTest extends FunSuite {
-  private val p = new NodeParserInternal
+class StmParserTest extends FunSuite {
+
+  private val p = new StmParser {}
 
   test("ident") {
     val r = p.parseAll(p.stm, "x")
@@ -17,13 +18,13 @@ class NodeParserInternalStmTest extends FunSuite {
     val r = p.parseAll(p.stm, "rotate(x, 1)")
 
     assert(r.successful)
-    assert(r.get == StmBlock(List(StmModifier("rotate", List(ExprIdent("x"), ExprAbs(1))))))
+    assert(r.get == StmBlock(List(StmModifier("rotate", List(ExprIdent("x"), ExprValue(1))))))
   }
 
   test("match") {
     val r = p.parseAll(p.stm, "sx(1) { A }")
 
     assert(r.successful)
-    assert(r.get == StmBlock(List(StmModifier("sx", List(ExprAbs(1))), StmMatch(List(StmIdent("A"))))))
+    assert(r.get == StmBlock(List(StmModifier("sx", List(ExprValue(1))), StmMatch(List(StmIdent("A"))))))
   }
 }
