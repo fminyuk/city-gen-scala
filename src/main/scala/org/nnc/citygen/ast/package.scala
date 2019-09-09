@@ -12,9 +12,9 @@ package object ast {
 
   sealed trait Stm
 
-  final case class StmBlock(items: Seq[Stm]) extends Stm
-
   final case class StmIdent(name: String) extends Stm
+
+  final case class StmBlock(items: Seq[Stm]) extends Stm
 
   final case class StmMatch(items: Seq[Stm]) extends Stm
 
