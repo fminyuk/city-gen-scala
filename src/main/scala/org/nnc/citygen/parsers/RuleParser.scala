@@ -3,7 +3,7 @@ package org.nnc.citygen.parsers
 import org.nnc.citygen.ast._
 import scala.util.matching.Regex
 
-private trait RuleParser extends StmParser {
+trait RuleParser extends StmParser {
 
   protected val integer: Regex = """[+-]?\d+""".r
 

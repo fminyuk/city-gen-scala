@@ -5,7 +5,7 @@ import org.nnc.citygen.ast.{Expr, ExprFunction, ExprIdent, ExprValue}
 import scala.util.matching.Regex
 import scala.util.parsing.combinator.{PackratParsers, RegexParsers}
 
-private trait ExprParser extends RegexParsers with PackratParsers {
+trait ExprParser extends RegexParsers with PackratParsers {
 
   protected val real: Regex = """[+-]?\d+(:?\.\d*)?(:?[eE][+-]?\d+)?""".r
   protected val identifier: Regex = """[a-zA-Z_][a-zA-Z_0-9]*""".r

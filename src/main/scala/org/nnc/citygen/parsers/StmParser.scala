@@ -2,7 +2,7 @@ package org.nnc.citygen.parsers
 
 import org.nnc.citygen.ast.{Stm, StmBlock, StmIdent, StmMatch, StmModifier}
 
-private trait StmParser extends ExprParser {
+trait StmParser extends ExprParser {
 
   def stm: Parser[Stm] = stmBlock | stmIdent
 
