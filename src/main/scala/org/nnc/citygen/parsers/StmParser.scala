@@ -1,25 +1,27 @@
 package org.nnc.citygen.parsers
 
-import org.nnc.citygen.ast.{Stm, StmBlock, StmIdent, StmMatch, StmModifier}
+import org.nnc.citygen.ast.{Stm, StmGen, StmIdent}
 
 trait StmParser extends ExprParser {
 
-  def stm: Parser[Stm] = stmBlock | stmIdent
+  private val genFuns = Seq(
+    "subdiv",
+    "repeat",
+    "comb"
+  ).map(Parser(_)).reduce(_ | _)
+
+  def stm: Parser[Stm] = stmGen | stmIdent
 
   def stmIdent: Parser[Stm] = identifier ^^ {
     name => StmIdent(name)
   }
 
-  def stmModifier: Parser[Stm] = identifier ~ ("(" ~> repsep(expr, ",") <~ ")") ^^ {
-    case name ~ args => StmModifier(name, args)
+  def stmGen: Parser[Stm] = genFuns ~ ("(" ~> repsep(expr, ",") <~ ")") ~ ("{" ~> rep1sep(stm, "|") <~ "}") ^^ {
+    case name ~ args ~ results => StmGen(name, args, results)
   }
 
-  def stmMatch: Parser[Stm] = "{" ~> rep1sep(stm, "|") <~ "}" ^^ {
-    items => StmMatch(items)
-  }
-
-  def stmBlock: Parser[Stm] = rep1(stmModifier | "[" ~> stmBlock <~ "]") ~ opt(stmMatch) ^^ {
-    case items ~ Some(m) => StmBlock(items :+ m)
-    case items ~ None => StmBlock(items)
-  }
+//  def stmBlock: Parser[Stm] = rep1(stmModifier | "[" ~> stmBlock <~ "]") ~ opt(stmMatch) ^^ {
+//    case items ~ Some(m) => StmBlock(items :+ m)
+//    case items ~ None => StmBlock(items)
+//  }
 }

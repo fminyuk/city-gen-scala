@@ -34,9 +34,11 @@ package object show {
 
   private def stmToString[T <: Stm](e: T)(implicit showExpr: Show[Expr]): String = e match {
     case ident: StmIdent => ident.name
-    case block: StmBlock => s"[${reduceEmpty(block.items.map(stmToString), " ")}]"
-    case mtc: StmMatch => s"{${reduceEmpty(mtc.items.map(stmToString), " | ")}}"
-    case mod: StmModifier => s"${mod.name}(${reduceEmpty(mod.args.map(showExpr.show), ", ")})"
+    case gen: StmGen =>
+      val name = gen.name
+      val args = reduceEmpty(gen.args.map(showExpr.show), ", ")
+      val results = reduceEmpty(gen.results.map(stmToString), " | ")
+      s"$name($args) {$results}"
   }
 
   private def reduceEmpty(seq: Seq[String], delimiter: String): String = {

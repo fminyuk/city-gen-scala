@@ -14,17 +14,10 @@ class StmParserTest extends FunSuite {
     assert(r.get == StmIdent("x"))
   }
 
-  test("modifier") {
-    val r = p.parseAll(p.stm, "rotate(x, 1)")
+  test("gen") {
+    val r = p.parseAll(p.stm, "subdiv(x, 1, 2) {A | B}")
 
     assert(r.successful)
-    assert(r.get == StmBlock(List(StmModifier("rotate", List(ExprIdent("x"), ExprInt(1))))))
-  }
-
-  test("match") {
-    val r = p.parseAll(p.stm, "sx(1) { A }")
-
-    assert(r.successful)
-    assert(r.get == StmBlock(List(StmModifier("sx", List(ExprInt(1))), StmMatch(List(StmIdent("A"))))))
+    assert(r.get == StmGen("subdiv", Seq(ExprIdent("x"), ExprInt(1), ExprInt(2)), Seq(StmIdent("A"), StmIdent("B"))))
   }
 }

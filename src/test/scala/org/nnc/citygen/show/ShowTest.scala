@@ -43,22 +43,10 @@ class ShowTest extends FunSuite {
     assert(s.show == "A")
   }
 
-  test("stm modifier") {
-    val s = StmModifier("S", Seq(ExprFloat(2), ExprFunction("min", Seq(ExprFloat(1), ExprIdent("a")))))
+  test("stm gen") {
+    val s = StmGen("repeat", Seq(ExprIdent("x"), ExprFloat(2)), Seq(StmIdent("A"), StmIdent("B")))
 
-    assert(s.show == "S(2.0, min(1.0, a))")
-  }
-
-  test("stm block") {
-    val s = StmBlock(Seq(StmModifier("S", Seq(ExprFloat(2))), StmModifier("I", Seq())))
-
-    assert(s.show == "[S(2.0) I()]")
-  }
-
-  test("stm match") {
-    val s = StmMatch(Seq(StmIdent("A"), StmIdent("B")))
-
-    assert(s.show == "{A | B}")
+    assert(s.show == "repeat(x, 2.0) {A | B}")
   }
 
   test("rule simple") {
