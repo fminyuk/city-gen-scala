@@ -16,21 +16,19 @@ package object ast {
 
   sealed trait Stm
 
-  final case class StmIdent(name: String) extends Stm
+  sealed trait StmRes extends Stm
+
+  final case class StmIdent(name: String) extends StmRes
+
+  final case class StmGen(name: String, args: Seq[Expr], results: Seq[Stm]) extends StmRes
+
+  final case class StmMod(name: String, args: Seq[Expr]) extends Stm
+
+  final case class StmModRes(mods: Seq[StmMod], res: StmRes) extends Stm
 
 //  final case class StmValue(expr: Expr) extends Stm
-
-//  final case class StmSubDiv(axis: StmIdent, values: Seq[StmValue]) extends Stm
 //
-//  final case class StmRepeat(axis: StmIdent, value: StmValue) extends Stm
-
-  final case class StmGen(name: String, args: Seq[Expr], results: Seq[Stm]) extends Stm
-
 //  final case class StmBlock(items: Seq[Stm]) extends Stm
-//
-//  final case class StmMatch(items: Seq[Stm]) extends Stm
-//
-//  final case class StmModifier(name: String, args: Seq[Expr]) extends Stm
 
   final case class Rule(id: Int, predecessor: String, cond: Option[Expr], successor: Stm, probability: Option[Double])
 
