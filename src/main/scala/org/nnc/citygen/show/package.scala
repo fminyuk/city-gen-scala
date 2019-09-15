@@ -1,13 +1,11 @@
 package org.nnc.citygen
 
 import cats.Show
+import cats.syntax.show._
+import cats.instances.all._
 import org.nnc.citygen.ast._
 
 package object show {
-
-  import cats.syntax.show._
-  import cats.instances.all._
-
   implicit def showExpr[T <: Expr]: Show[T] = Show.show(exprToString)
 
   implicit def showStm[T <: Stm](implicit showExpr: Show[Expr]): Show[T] = Show.show(stmToString)
@@ -27,7 +25,9 @@ package object show {
   })
 
   private def exprToString[T <: Expr](e: T): String = e match {
-    case value: ExprValue => value.value.toString
+    case value: ExprBool => value.value.toString
+    case value: ExprInt => value.value.toString
+    case value: ExprFloat => value.value.toString
     case ident: ExprIdent => ident.name
     case fun: ExprFunction => s"${fun.name}(${reduceEmpty(fun.args.map(exprToString), ", ")})"
   }

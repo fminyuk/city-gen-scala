@@ -7,8 +7,20 @@ class ShowTest extends FunSuite {
 
   import cats.implicits._
 
-  test("expr value") {
-    val e = ExprValue(10)
+  test("expr value: bool") {
+    val e = ExprBool(true)
+
+    assert(e.show == "true")
+  }
+
+  test("expr value: int") {
+    val e = ExprInt(10)
+
+    assert(e.show == "10")
+  }
+
+  test("expr value: float") {
+    val e = ExprFloat(10)
 
     assert(e.show == "10.0")
   }
@@ -20,9 +32,9 @@ class ShowTest extends FunSuite {
   }
 
   test("expr function") {
-    val e = ExprFunction("min", Seq(ExprValue(1), ExprIdent("a")))
+    val e = ExprFunction("min", Seq(ExprInt(1), ExprIdent("a")))
 
-    assert(e.show == "min(1.0, a)")
+    assert(e.show == "min(1, a)")
   }
 
   test("stm ident") {
@@ -32,13 +44,13 @@ class ShowTest extends FunSuite {
   }
 
   test("stm modifier") {
-    val s = StmModifier("S", Seq(ExprValue(2), ExprFunction("min", Seq(ExprValue(1), ExprIdent("a")))))
+    val s = StmModifier("S", Seq(ExprFloat(2), ExprFunction("min", Seq(ExprFloat(1), ExprIdent("a")))))
 
     assert(s.show == "S(2.0, min(1.0, a))")
   }
 
   test("stm block") {
-    val s = StmBlock(Seq(StmModifier("S", Seq(ExprValue(2))), StmModifier("I", Seq())))
+    val s = StmBlock(Seq(StmModifier("S", Seq(ExprFloat(2))), StmModifier("I", Seq())))
 
     assert(s.show == "[S(2.0) I()]")
   }
@@ -56,7 +68,7 @@ class ShowTest extends FunSuite {
   }
 
   test("rule condition") {
-    val r = Rule(1, "A", Some(ExprFunction(">", Seq(ExprIdent("h"), ExprValue(5)))), StmIdent("B"), None)
+    val r = Rule(1, "A", Some(ExprFunction(">", Seq(ExprIdent("h"), ExprFloat(5)))), StmIdent("B"), None)
 
     assert(r.show == "1: A: >(h, 5.0) -> B")
   }

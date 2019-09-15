@@ -18,13 +18,13 @@ class StmParserTest extends FunSuite {
     val r = p.parseAll(p.stm, "rotate(x, 1)")
 
     assert(r.successful)
-    assert(r.get == StmBlock(List(StmModifier("rotate", List(ExprIdent("x"), ExprValue(1))))))
+    assert(r.get == StmBlock(List(StmModifier("rotate", List(ExprIdent("x"), ExprInt(1))))))
   }
 
   test("match") {
     val r = p.parseAll(p.stm, "sx(1) { A }")
 
     assert(r.successful)
-    assert(r.get == StmBlock(List(StmModifier("sx", List(ExprValue(1))), StmMatch(List(StmIdent("A"))))))
+    assert(r.get == StmBlock(List(StmModifier("sx", List(ExprInt(1))), StmMatch(List(StmIdent("A"))))))
   }
 }

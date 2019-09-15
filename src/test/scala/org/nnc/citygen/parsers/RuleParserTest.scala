@@ -1,6 +1,6 @@
 package org.nnc.citygen.parsers
 
-import org.nnc.citygen.ast.{ExprFunction, ExprIdent, ExprValue, Rule, StmIdent}
+import org.nnc.citygen.ast._
 import org.scalatest.FunSuite
 
 class RuleParserTest extends FunSuite {
