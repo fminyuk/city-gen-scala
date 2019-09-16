@@ -16,7 +16,13 @@ package object ast {
 
   sealed trait Stm
 
+  sealed trait StmPrg extends Stm
+
   sealed trait StmRes extends Stm
+
+  final case class StmModRes(mods: Seq[StmMod], res: StmRes) extends StmPrg
+
+  final case class StmBlock(items: Seq[StmPrg]) extends StmPrg
 
   final case class StmIdent(name: String) extends StmRes
 
@@ -24,12 +30,8 @@ package object ast {
 
   final case class StmMod(name: String, args: Seq[Expr]) extends Stm
 
-  final case class StmModRes(mods: Seq[StmMod], res: StmRes) extends Stm
-
-//  final case class StmValue(expr: Expr) extends Stm
-//
-//  final case class StmBlock(items: Seq[Stm]) extends Stm
-
   final case class Rule(id: Int, predecessor: String, cond: Option[Expr], successor: Stm, probability: Option[Double])
+
+  //  final case class StmValue(expr: Expr) extends Stm
 
 }
