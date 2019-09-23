@@ -1,0 +1,16 @@
+package org.nnc.citygen.interpreters
+
+import scala.reflect.runtime.universe.TypeTag
+import org.nnc.citygen.ast.Expr
+
+class ExprInterpreterImpl(compiler: ExprCompiler) extends ExprInterpreter {
+  override def exec[R: TypeTag: ValueCoder](expr: Expr): Either[Error, R] = {
+    val requiredType = implicitly[TypeTag[R]].tpe
+    val coder = implicitly[ValueCoder[R]]
+
+    for {
+      program <- compiler.compile(expr, requiredType)
+    } yield coder.decode(program.exec)
+  }
+}
+
