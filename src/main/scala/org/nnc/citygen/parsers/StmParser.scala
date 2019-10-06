@@ -4,17 +4,8 @@ import org.nnc.citygen.ast.{StmBlock, StmGen, StmIdent, StmMod, StmModRes, StmPr
 
 trait StmParser extends ExprParser {
 
-  private val gens = Seq(
-    "subdiv",
-    "repeat",
-    "comp"
-  ).map(Parser(_)).reduce(_ | _)
-
-  private val mods = Seq(
-    "T",
-    "R",
-    "S"
-  ).map(Parser(_)).reduce(_ | _)
+  private val gens = oneof(StmParser.GENS)
+  private val mods = oneof(StmParser.MODS)
 
   def stm: Parser[StmBlock] = rep1(stmPrg) ^^ {
     items => StmBlock(items)
@@ -32,11 +23,29 @@ trait StmParser extends ExprParser {
 
   def stmRes: Parser[StmRes] = stmGen | stmIdent
 
-  def stmIdent: Parser[StmRes] = identifier ^^ {
+  def stmIdent: Parser[StmRes] = ExprParser.IDENTIFIER ^^ {
     name => StmIdent(name)
   }
 
   def stmGen: Parser[StmRes] = gens ~ ("(" ~> repsep(expr, ",") <~ ")") ~ ("{" ~> rep1sep(stm, "|") <~ "}") ^^ {
     case name ~ args ~ results => StmGen(name, args, results)
   }
+
+  def oneof(idents: Seq[String]): Parser[String] = {
+    idents.map(Parser(_)).reduce(_ | _)
+  }
+}
+
+object StmParser {
+  val GENS: Seq[String] = Seq(
+    "subdiv",
+    "repeat",
+    "comp"
+  )
+
+  val MODS: Seq[String] = Seq(
+    "T",
+    "R",
+    "S"
+  )
 }

@@ -29,19 +29,28 @@ package object show {
     case value: ExprInt => value.value.toString
     case value: ExprFloat => value.value.toString
     case ident: ExprIdent => ident.name
-    case fun: ExprFunction => s"${fun.name}(${reduceEmpty(fun.args.map(exprToString), ", ")})"
+    case fun: ExprFunction => s"${fun.name}(${reduce(fun.args.map(exprToString), ", ")})"
   }
 
   private def stmToString[T <: Stm](e: T)(implicit showExpr: Show[Expr]): String = e match {
     case ident: StmIdent => ident.name
     case gen: StmGen =>
       val name = gen.name
-      val args = reduceEmpty(gen.args.map(showExpr.show), ", ")
-      val results = reduceEmpty(gen.results.map(stmToString), " | ")
+      val args = reduce(gen.args.map(showExpr.show), ", ")
+      val results = reduce(gen.results.map(stmToString), " | ")
       s"$name($args) {$results}"
+    case mod: StmMod =>
+      val name = mod.name
+      val args = reduce(mod.args.map(showExpr.show), ", ")
+      s"$name($args)"
+    case mdr: StmModRes =>
+      reduce(mdr.mods.map(stmToString) :+ stmToString(mdr.res), " ")
+    case blk: StmBlock =>
+      val items = reduce(blk.items.map(stmToString), " ")
+      s"[$items]"
   }
 
-  private def reduceEmpty(seq: Seq[String], delimiter: String): String = {
-    seq.reduceOption(_ + delimiter + _).getOrElse("")
+  private def reduce(seq: Seq[String], delimiter: String, default: String = ""): String = {
+    seq.reduceOption(_ + delimiter + _).getOrElse(default)
   }
 }

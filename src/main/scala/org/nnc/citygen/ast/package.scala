@@ -26,7 +26,7 @@ package object ast {
 
   final case class StmIdent(name: String) extends StmRes
 
-  final case class StmGen(name: String, args: Seq[Expr], results: Seq[Stm]) extends StmRes
+  final case class StmGen(name: String, args: Seq[Expr], results: Seq[StmPrg]) extends StmRes
 
   final case class StmMod(name: String, args: Seq[Expr]) extends Stm
 

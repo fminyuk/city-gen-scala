@@ -44,7 +44,7 @@ class ShowTest extends FunSuite {
   }
 
   test("stm gen") {
-    val s = StmGen("repeat", Seq(ExprIdent("x"), ExprFloat(2)), Seq(StmIdent("A"), StmIdent("B")))
+    val s = StmGen("repeat", Seq(ExprIdent("x"), ExprFloat(2)), Seq(mod(StmIdent("A")), mod(StmIdent("B"))))
 
     assert(s.show == "repeat(x, 2.0) {A | B}")
   }
@@ -72,4 +72,6 @@ class ShowTest extends FunSuite {
 
     assert(r.show == "1: A: r -> B: 0.5")
   }
+
+  private def mod(prg: StmRes): StmModRes = StmModRes(Seq(), prg)
 }
